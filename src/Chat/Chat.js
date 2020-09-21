@@ -27,13 +27,36 @@ class Chat extends Component {
     }, 1000);
   }
 
+  handleInput = (customerMsg) => {
+    const msg = {
+      role: 'CUSTOMER',
+      text: customerMsg
+    }
+    this.state.messages.push(msg)
+    this.handleReply(customerMsg)
+    this.setState({
+      messages: [...this.state.messages]
+    })
+  }
+
+  handleReply = (customerMsg) => {
+    answersData.forEach((item) => {
+      item.tags.some(tag => {
+        if( customerMsg.indexOf(tag) > -1){
+          this.state.messages.push(item)
+          return true;
+        }
+      })
+    })
+  }
+
   render() {
     const { shop, messages } = this.state;
     return (
       <main className="Chat">
         <ChatHeader shop={shop} />
         <ChatBox messages={messages} />
-        <ChatInput />
+        <ChatInput handleInput={this.handleInput} />
       </main>
     );
   }
