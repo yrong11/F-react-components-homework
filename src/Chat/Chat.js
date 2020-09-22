@@ -30,25 +30,29 @@ class Chat extends Component {
   handleInput = (customerMsg) => {
     const msg = {
       role: 'CUSTOMER',
-      text: customerMsg
-    }
-    this.state.messages.push(msg)
-    this.handleReply(customerMsg)
-    this.setState({
-      messages: [...this.state.messages]
-    })
-  }
+      text: customerMsg,
+    };
+    this.addMsg(msg);
+    this.handleReply(customerMsg);
+  };
+
+  addMsg = (msg) => {
+    this.setState((preState) => ({
+      messages: preState.messages.concat(msg),
+    }));
+  };
 
   handleReply = (customerMsg) => {
     answersData.forEach((item) => {
-      item.tags.some(tag => {
-        if( customerMsg.indexOf(tag) > -1){
-          this.state.messages.push(item)
+      item.tags.some((tag) => {
+        if (customerMsg.indexOf(tag) > -1) {
+          this.addMsg(item);
           return true;
         }
-      })
-    })
-  }
+        return false;
+      });
+    });
+  };
 
   render() {
     const { shop, messages } = this.state;
